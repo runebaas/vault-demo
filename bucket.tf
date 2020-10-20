@@ -21,3 +21,9 @@ resource "aws_s3_bucket_object" "demo-object" {
   key    = "test-item.txt"
   content = "Hello World"
 }
+
+resource "aws_s3_bucket_object" "new-item-object" {
+  bucket = aws_s3_bucket.vault-demo-bucket.bucket
+  key    = "new-item.txt"
+  content = "Hello Cloud People"
+}
