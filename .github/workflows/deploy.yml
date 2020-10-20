@@ -1,0 +1,32 @@
+---
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    env:
+      AWS_DEFAULT_REGION: "eu-west-1"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get AWS Credentials
+        uses: hashicorp/vault-action@v2.0.1
+        id: vault
+        with:
+          url: https://vault.boerlage.me
+          method: github
+          githubToken: ${{ secrets.USER_TOKEN }}
+          secrets: |
+            boerlage/aws/creds/boerlage_aws_deploy access_key | AWS_ACCESS_KEY_ID ;
+            boerlage/aws/creds/boerlage_aws_deploy secret_key | AWS_SECRET_ACCESS_KEY ;
+      - name: Wait for IAM User to become available
+        run: sleep 10
+      - uses: hashicorp/setup-terraform@v1
+      - name: TF Init
+        run: terraform init
+      - name: TF Apply
+        run: terraform apply -no-color -auto-approve
