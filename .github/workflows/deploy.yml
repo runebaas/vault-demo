@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Get AWS Credentials
-        uses: hashicorp/vault-action@v2.0.1
+        uses: hashicorp/vault-action@v2.1.1
         id: vault
         with:
           url: https://vault.boerlage.me
